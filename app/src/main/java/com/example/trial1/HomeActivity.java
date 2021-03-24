@@ -66,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.appointment:
                 //add the function to perform here
-                openHomeActivity();
+                openAppointmentActivity();
                 break;
             case R.id.refill:
                 //add the function to perform here
@@ -78,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case R.id.settings:
                 //add the function to perform here
-                openMedicationActivity();
+                openSettingsActivity();
                 break;
         }
         return true;
@@ -106,6 +106,16 @@ public class HomeActivity extends AppCompatActivity {
 
     public void openMedAddPageOneActivity(){
         Intent intent = new Intent(this, MedAddActivity.class);
+        startActivity(intent);
+    }
+
+    public void openAppointmentActivity(){
+        Intent intent = new Intent(this, AppointmentActivity.class);
+        startActivity(intent);
+    }
+
+    public void openSettingsActivity(){
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 }

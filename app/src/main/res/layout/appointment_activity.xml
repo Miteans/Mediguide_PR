@@ -14,7 +14,7 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#FF6200EE"
+            android:background="@color/primary"
             app:title="Appointment Details"
             app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -148,6 +148,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/doctor_name"
                 android:layout_marginTop="50dp"
+                android:background="@color/primary"
+                android:textColor="@color/white"
                 android:layout_margin="40dp"
                 android:text="Done" />
 
@@ -156,5 +158,3 @@
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-

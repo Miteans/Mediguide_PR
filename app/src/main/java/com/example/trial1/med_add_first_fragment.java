@@ -1,15 +1,27 @@
 package com.example.trial1;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -30,6 +42,10 @@ public class med_add_first_fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ImageView imageView;
+    Button camera;
+
+
 
     public med_add_first_fragment() {
         // Required empty public constructor
@@ -71,6 +87,58 @@ public class med_add_first_fragment extends Fragment {
 
         autoCompleteTextView.setAdapter(new ArrayAdapter<String>(view.getContext(),
                 R.layout.option_items, options));
+
+
+        imageView = view.findViewById(R.id.image_view);
+        camera = view.findViewById(R.id.open_camera);
+
+        if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[] {
+                            Manifest.permission.CAMERA
+                    },
+                    100);
+        }
+
+        camera.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, 100);
+            }
+        });
+
+        TextInputLayout dosage = (TextInputLayout) view.findViewById(R.id.dosage);
+
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String item = (String) adapterView.getItemAtPosition(i);
+                if(item=="Pill"){
+                    System.out.println("helo --------------------------------------------------------------------");
+                    dosage.setHelperText("Enetr number of pills");
+                    System.out.println(dosage);
+
+                }
+            }
+        });
+
+//        if(! autoCompleteTextView.getText().toString().isEmpty()){
+//            if(autoCompleteTextView.getText().toString().equals("Pill")){
+//                TextInputLayout dosage = (TextInputLayout) view.findViewById(R.id.dosage);
+//                dosage.setHelperText("Enetr number of pills");
+//            }
+//        }
+
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        if (requestCode == 100){
+            Bitmap captureImage = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(captureImage);
+
+        }
     }
 }

@@ -8,10 +8,21 @@ import android.widget.EditText;
 import android.util.Patterns;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class SignupActivity extends Activity {
     EditText name, email, phone, password, confirm_password;
     Button register;
     boolean isNameValid, isEmailValid, isPhoneValid, isPasswordValid, isConfirmPasswordValid;
+    DatabaseReference reference;
+    User user;
+    long maxid = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,16 +35,45 @@ public class SignupActivity extends Activity {
         password = (EditText) findViewById(R.id.inputPassword);
         confirm_password = (EditText) findViewById(R.id.inputConfirmPassword);
         register = (Button) findViewById(R.id.btnLogin);
+        user = new User();
+        reference= FirebaseDatabase.getInstance().getReference().child("User");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                    maxid = (dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SetValidation();
+                if(SetValidation()){
+                    String userName = name.getText().toString();
+                    String userEmail = email.getText().toString();
+                    Long userPhone = Long.parseLong((phone.getText().toString().trim()));
+                    String userPassword = password.getText().toString();
+
+                    user.setName(userName);
+                    user.setEmail(userEmail);
+                    user.setPhonenumber(userPhone);
+                    user.setPassword(userPassword);
+
+                    reference.child(String.valueOf(maxid+1)).setValue(user);
+
+                    Toast.makeText(SignupActivity.this,"Registered successfully",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
 
-    public void SetValidation() {
+    public Boolean SetValidation() {
         // Check for a valid name.
         if (name.getText().toString().isEmpty()) {
             name.setError(getResources().getString(R.string.name_error));
@@ -84,8 +124,10 @@ public class SignupActivity extends Activity {
         }
 
         if (isNameValid && isEmailValid && isPhoneValid && isPasswordValid && isConfirmPasswordValid) {
-            Toast.makeText(getApplicationContext(), "Successfull", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Successfull", Toast.LENGTH_SHORT).show();
+            return true;
         }
+        return  false;
     }
 
 }

@@ -1,4 +1,5 @@
 package com.example.trial1;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,8 +81,13 @@ public class LoginActivity extends Activity {
 
         if (isEmailValid && isPasswordValid) {
             Toast.makeText(getApplicationContext(), "Successfully", Toast.LENGTH_SHORT).show();
+            openHomeActivity();
         }
 
     }
 
+    public void openHomeActivity(){
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+    }
 }
